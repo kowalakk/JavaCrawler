@@ -32,10 +32,12 @@ public class MainFrame extends JFrame {
             try {
                 textArea.setText(readWebPage(urlField.getText()));
             } catch (IOException ex) {
+                textArea.setText("Nie można otworzyć strony o podanym aresie");
                 throw new RuntimeException(ex);
             }
         });
         this.add(button);
+        this.getRootPane().setDefaultButton(button);
 
         textArea.setFont(myFont);
         textArea.setEditable(false);
@@ -49,6 +51,8 @@ public class MainFrame extends JFrame {
 
     public static String readWebPage(String urltext) throws IOException {
 
+        if (!urltext.startsWith("http"))
+            urltext = "https://"+urltext;
         var url = new URL(urltext);
         try (var br = new BufferedReader(new InputStreamReader(url.openStream()))) {
 

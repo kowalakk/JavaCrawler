@@ -4,17 +4,22 @@ import org.jsoup.nodes.Document;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 public class MainFrame extends JFrame {
     static Font myFont = new Font("Arial", Font.BOLD, 16);
     JTextArea textArea = new JTextArea();
     File destinationFile;
     String settingsFilePath = "src/settings.txt";
-    File destionationFile;
     JTextField filterTextBox;
     String[] parseFilters = new String[]{"None", "Class name", "Id", "Type"};
     int selectedFilter;
+    JTextField urlField;
+    JComboBox<String> filterComboBox;
+    JLabel saveToFileFileNameLabel;
 
     MainFrame() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -27,7 +32,7 @@ public class MainFrame extends JFrame {
         urlLabel.setBounds(30, 25, 100, 40);
         this.add(urlLabel);
 
-        JTextField urlField = new JTextField();
+        urlField = new JTextField();
         urlField.setFont(myFont);
         urlField.setBounds(150, 25, 500, 40);
         this.add(urlField);
@@ -51,6 +56,10 @@ public class MainFrame extends JFrame {
         saveToFileLabel.setBounds(30, 75, 100, 39);
         this.add(saveToFileLabel);
 
+        saveToFileFileNameLabel = new JLabel("");
+        saveToFileFileNameLabel.setBounds(300, 75, 120, 40);
+        this.add(saveToFileFileNameLabel);
+
         JButton saveToFileButton = new JButton("Choose file");
         saveToFileButton.setFont(myFont);
         saveToFileButton.setBounds(150, 75, 120, 39);
@@ -59,11 +68,14 @@ public class MainFrame extends JFrame {
                 JFileChooser saveToFileChooser = new JFileChooser();
                 saveToFileChooser.showSaveDialog(null);
                 destinationFile = saveToFileChooser.getSelectedFile();
+                saveToFileFileNameLabel.setText(destinationFile.getName());
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
         });
         this.add(saveToFileButton);
+
+
 
         JLabel filterByLabel = new JLabel("Filter by: ");
         filterByLabel.setFont(myFont);
@@ -76,10 +88,10 @@ public class MainFrame extends JFrame {
         filterTextBox.setVisible(false);
         this.add(filterTextBox);
 
-        JComboBox<String> filterComboBox = new JComboBox<>(parseFilters);
+        filterComboBox = new JComboBox<>(parseFilters);
         filterComboBox.setBounds(150, 125, 120, 40);
         filterComboBox.setFont(myFont);
-        filterComboBox.addActionListener ( e -> {
+        filterComboBox.addActionListener(e -> {
             selectedFilter = filterComboBox.getSelectedIndex();
             filterTextBox.setVisible(selectedFilter != 0);
         });
@@ -90,12 +102,12 @@ public class MainFrame extends JFrame {
         usePreviousSettingsCheckbox.setBounds(30, 175, 150, 40);
         usePreviousSettingsCheckbox.addActionListener(e -> {
             try {
-                if(usePreviousSettingsCheckbox.isSelected())
+                if (usePreviousSettingsCheckbox.isSelected())
                     getSettingsFromFile();
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 throw new RuntimeException(ex);
-        }});
+            }
+        });
         this.add(usePreviousSettingsCheckbox);
 
         JButton extractButton = new JButton("Extract");
@@ -103,7 +115,7 @@ public class MainFrame extends JFrame {
         extractButton.setBounds(650, 175, 120, 39);
         extractButton.addActionListener(e -> {
             try {
-                if (destionationFile == null) {
+                if (destinationFile == null) {
                     JDialog errorDialog = new JDialog();
                     errorDialog.setLocationRelativeTo(this);
                     Container errorDialogContent = new JLabel("There's no file selected!");
@@ -113,11 +125,8 @@ public class MainFrame extends JFrame {
 
                     errorDialog.setVisible(true);
 
-                }
-                else {
-                    String filterString = "";
-
-                    saveSettingsToFile(urlField.getText(), filterComboBox.getSelectedItem().toString(), filterString);
+                } else {
+                    saveSettingsToFile(urlField.getText(), filterComboBox.getSelectedItem().toString(), filterTextBox.getText());
                     extractToFile();
                 }
             } catch (Exception ex) {
@@ -137,46 +146,75 @@ public class MainFrame extends JFrame {
         this.setVisible(true);
     }
 
-    private void saveSettingsToFile(String url, String filter, String filterString) throws IOException  {
-        try{
+    private void saveSettingsToFile(String url, String filter, String filterString) throws IOException {
+        try {
             FileWriter fileWriter = new FileWriter(settingsFilePath);
             PrintWriter printWriter = new PrintWriter(fileWriter);
-            printWriter.printf("url: %s \n file: %s \n filter: %s \n filter_string: %s", url, this.destinationFile.getAbsolutePath(), filter, filterString);
+            printWriter.printf("url %s \nfile %s \nfilter %s \nfilter_string %s", url, this.destinationFile.getAbsolutePath(), filter, filterString);
             printWriter.close();
             fileWriter.close();
-        }
-        catch (Exception e){
-            throw new IOException ();
-        }
-    }
-
-    private void getSettingsFromFile() {
-    }
-
-    public static String readWebPage(String urltext) throws IOException {
-    private String parseDocument(Document document) {
-        switch (selectedFilter)
-        {
-            case 1:
-                return Objects.requireNonNull(document.getElementsByClass(filterTextBox.getText())).toString();
-            case 2:
-                return Objects.requireNonNull(document.getElementById(filterTextBox.getText())).toString();
-            case 3:  // Type
-                return document.select(filterTextBox.getText()).toString();
-            default: // None
-                return document.toString();
+        } catch (Exception e) {
+            throw new IOException();
         }
     }
 
-    public static Document readWebPage(String urltext) throws IOException {
-
-        if (!urltext.startsWith("http") && !urltext.startsWith("file://"))
-            urltext = "https://" + urltext;
-
-        return Jsoup.connect(urltext).get();
+    private void getSettingsFromFile() throws IOException {
+        try{
+            var br = new BufferedReader(new FileReader(settingsFilePath));
+            String line;
+            while ((line = br.readLine()) != null){
+                String[] args = line.split(" ");
+                switch (args[0]){
+                    case "url":
+                        urlField.setText(args[1]);
+                        break;
+                    case "file":
+                        String filename = args[1];
+                        for(int i = 2; i < args.length; i++){   // odtworzenie nazwy pliku zawierającej spacje
+                            filename += " ";
+                            filename += args[i];
+                        }
+                        destinationFile = new File(filename);
+                        saveToFileFileNameLabel.setText(destinationFile.getName());
+                        break;
+                    case "filter":
+                        filterComboBox.setSelectedIndex(new ArrayList<String>(List.of(parseFilters)).indexOf(args[1]));
+                        break;
+                    case "filter_string":
+                        if(args.length > 1)
+                            filterTextBox.setText(args[1]);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        } catch (Exception e) {
+            throw new IOException();
+        }
     }
 
-    public static void extractToFile() {
+        private String parseDocument (Document document){
+            switch (selectedFilter) {
+                case 1:
+                    return Objects.requireNonNull(document.getElementsByClass(filterTextBox.getText())).toString();
+                case 2:
+                    return Objects.requireNonNull(document.getElementById(filterTextBox.getText())).toString();
+                case 3:  // Type
+                    return document.select(filterTextBox.getText()).toString();
+                default: // None
+                    return document.toString();
+            }
+        }
 
+        public static Document readWebPage (String urltext) throws IOException {
+
+            if (!urltext.startsWith("http") && !urltext.startsWith("file://"))
+                urltext = "https://" + urltext;
+
+            return Jsoup.connect(urltext).get();
+        }
+
+        public static void extractToFile () {
+
+        }
     }
-}

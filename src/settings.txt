@@ -1,1 +1,4 @@
-Product name is iPhone and its price is 1000 $
+url google.com 
+file C:\Users\Zuzia\Documents\f 1.txt 
+filter Id 
+filter_string 123

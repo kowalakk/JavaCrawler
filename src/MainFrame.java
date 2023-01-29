@@ -1,17 +1,24 @@
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
-import java.net.URL;
+import java.util.Objects;
 
 public class MainFrame extends JFrame {
     static Font myFont = new Font("Arial", Font.BOLD, 16);
     JTextArea textArea = new JTextArea();
     File destinationFile;
     String settingsFilePath = "src/settings.txt";
+    File destionationFile;
+    JTextField filterTextBox;
+    String[] parseFilters = new String[]{"None", "Class name", "Id", "Type"};
+    int selectedFilter;
 
     MainFrame() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(800, 600);
+        this.setSize(800, 800);
         this.setTitle("Web Crawler");
         this.setLayout(null);
 
@@ -30,9 +37,9 @@ public class MainFrame extends JFrame {
         crawlButton.setBounds(670, 25, 100, 39);
         crawlButton.addActionListener(e -> {
             try {
-                textArea.setText(readWebPage(urlField.getText()));
+                textArea.setText(parseDocument(readWebPage(urlField.getText())));
             } catch (IOException ex) {
-                textArea.setText("Nie można otworzyć strony o podanym adresie");
+                textArea.setText("Requested address cannot be reached");
                 throw new RuntimeException(ex);
             }
         });
@@ -63,10 +70,19 @@ public class MainFrame extends JFrame {
         filterByLabel.setBounds(30, 125, 120, 40);
         this.add(filterByLabel);
 
+        filterTextBox = new JTextField();
+        filterTextBox.setBounds(300, 125, 120, 40);
+        filterTextBox.setFont(myFont);
+        filterTextBox.setVisible(false);
+        this.add(filterTextBox);
 
-        JComboBox filterComboBox = new JComboBox(new String[] {"None", "Class name", "Id", "Type"});
+        JComboBox<String> filterComboBox = new JComboBox<>(parseFilters);
         filterComboBox.setBounds(150, 125, 120, 40);
         filterComboBox.setFont(myFont);
+        filterComboBox.addActionListener ( e -> {
+            selectedFilter = filterComboBox.getSelectedIndex();
+            filterTextBox.setVisible(selectedFilter != 0);
+        });
         this.add(filterComboBox);
 
         JCheckBox usePreviousSettingsCheckbox = new JCheckBox();
@@ -87,8 +103,7 @@ public class MainFrame extends JFrame {
         extractButton.setBounds(650, 175, 120, 39);
         extractButton.addActionListener(e -> {
             try {
-                if (destinationFile == null)
-                {
+                if (destionationFile == null) {
                     JDialog errorDialog = new JDialog();
                     errorDialog.setLocationRelativeTo(this);
                     Container errorDialogContent = new JLabel("There's no file selected!");
@@ -139,27 +154,29 @@ public class MainFrame extends JFrame {
     }
 
     public static String readWebPage(String urltext) throws IOException {
-
-        if (!urltext.startsWith("http"))
-            urltext = "https://"+urltext;
-        var url = new URL(urltext);
-        try (var br = new BufferedReader(new InputStreamReader(url.openStream()))) {
-
-            String line;
-
-            var sb = new StringBuilder();
-
-            while ((line = br.readLine()) != null) {
-
-                sb.append(line);
-                sb.append(System.lineSeparator());
-            }
-
-            return sb.toString();
+    private String parseDocument(Document document) {
+        switch (selectedFilter)
+        {
+            case 1:
+                return Objects.requireNonNull(document.getElementsByClass(filterTextBox.getText())).toString();
+            case 2:
+                return Objects.requireNonNull(document.getElementById(filterTextBox.getText())).toString();
+            case 3:  // Type
+                return document.select(filterTextBox.getText()).toString();
+            default: // None
+                return document.toString();
         }
     }
 
-    public static void extractToFile(){
+    public static Document readWebPage(String urltext) throws IOException {
+
+        if (!urltext.startsWith("http") && !urltext.startsWith("file://"))
+            urltext = "https://" + urltext;
+
+        return Jsoup.connect(urltext).get();
+    }
+
+    public static void extractToFile() {
 
     }
 }

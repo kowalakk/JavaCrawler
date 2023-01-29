@@ -6,7 +6,8 @@ import java.net.URL;
 public class MainFrame extends JFrame {
     static Font myFont = new Font("Arial", Font.BOLD, 16);
     JTextArea textArea = new JTextArea();
-    File destionationFile;
+    File destinationFile;
+    String settingsFilePath = "src/settings.txt";
 
     MainFrame() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -50,7 +51,7 @@ public class MainFrame extends JFrame {
             try {
                 JFileChooser saveToFileChooser = new JFileChooser();
                 saveToFileChooser.showSaveDialog(null);
-                destionationFile = saveToFileChooser.getSelectedFile();
+                destinationFile = saveToFileChooser.getSelectedFile();
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
@@ -68,17 +69,25 @@ public class MainFrame extends JFrame {
         filterComboBox.setFont(myFont);
         this.add(filterComboBox);
 
-        JCheckBox rememberMyChoiceCheckbox = new JCheckBox();
-        rememberMyChoiceCheckbox.setText("Remember my choice");
-        rememberMyChoiceCheckbox.setBounds(30, 175, 150, 40);
-        this.add(rememberMyChoiceCheckbox);
+        JCheckBox usePreviousSettingsCheckbox = new JCheckBox();
+        usePreviousSettingsCheckbox.setText("Use previous settings");
+        usePreviousSettingsCheckbox.setBounds(30, 175, 150, 40);
+        usePreviousSettingsCheckbox.addActionListener(e -> {
+            try {
+                if(usePreviousSettingsCheckbox.isSelected())
+                    getSettingsFromFile();
+            }
+            catch (Exception ex) {
+                throw new RuntimeException(ex);
+        }});
+        this.add(usePreviousSettingsCheckbox);
 
         JButton extractButton = new JButton("Extract");
         extractButton.setFont(myFont);
         extractButton.setBounds(650, 175, 120, 39);
         extractButton.addActionListener(e -> {
             try {
-                if (destionationFile == null)
+                if (destinationFile == null)
                 {
                     JDialog errorDialog = new JDialog();
                     errorDialog.setLocationRelativeTo(this);
@@ -90,7 +99,12 @@ public class MainFrame extends JFrame {
                     errorDialog.setVisible(true);
 
                 }
-                else extractToFile();
+                else {
+                    String filterString = "";
+
+                    saveSettingsToFile(urlField.getText(), filterComboBox.getSelectedItem().toString(), filterString);
+                    extractToFile();
+                }
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
@@ -106,6 +120,22 @@ public class MainFrame extends JFrame {
         this.add(scroll);
 
         this.setVisible(true);
+    }
+
+    private void saveSettingsToFile(String url, String filter, String filterString) throws IOException  {
+        try{
+            FileWriter fileWriter = new FileWriter(settingsFilePath);
+            PrintWriter printWriter = new PrintWriter(fileWriter);
+            printWriter.printf("url: %s \n file: %s \n filter: %s \n filter_string: %s", url, this.destinationFile.getAbsolutePath(), filter, filterString);
+            printWriter.close();
+            fileWriter.close();
+        }
+        catch (Exception e){
+            throw new IOException ();
+        }
+    }
+
+    private void getSettingsFromFile() {
     }
 
     public static String readWebPage(String urltext) throws IOException {

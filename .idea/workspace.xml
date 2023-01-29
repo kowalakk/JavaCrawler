@@ -4,7 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="364f142a-e6a2-4e34-8b73-6e39a80ff974" name="Changes" comment="okienko do wyboru pliku i dropdown do filtrowania">
+    <list default="true" id="364f142a-e6a2-4e34-8b73-6e39a80ff974" name="Changes" comment="częściowa logika zapisu do pliku">
+      <change afterPath="$PROJECT_DIR$/src/settings.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MainFrame.java" afterDir="false" />
     </list>
@@ -21,6 +22,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -58,6 +64,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
         <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
@@ -109,6 +116,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="init" />
     <MESSAGE value="okienko do wyboru pliku i dropdown do filtrowania" />
-    <option name="LAST_COMMIT_MESSAGE" value="okienko do wyboru pliku i dropdown do filtrowania" />
+    <MESSAGE value="częściowa logika zapisu do pliku" />
+    <option name="LAST_COMMIT_MESSAGE" value="częściowa logika zapisu do pliku" />
   </component>
 </project>

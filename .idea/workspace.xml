@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="364f142a-e6a2-4e34-8b73-6e39a80ff974" name="Changes" comment="częściowa logika zapisu do pliku">
+    <list default="true" id="364f142a-e6a2-4e34-8b73-6e39a80ff974" name="Changes" comment="podstawowe filtrowanie">
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JavaCrawler.iml" beforeDir="false" afterPath="$PROJECT_DIR$/JavaCrawler.iml" afterDir="false" />
@@ -47,7 +47,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "E:/Zuzia/Documents/Informatyka/Java/jsoup",
+    "last_opened_file_path": "C:/Users/Konrad/source/repos/java/jsoup-1.15.3.jar",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -131,17 +131,6 @@
     <MESSAGE value="podstawowe filtrowanie" />
     <MESSAGE value="częściowa logika zapisu do pliku" />
     <option name="LAST_COMMIT_MESSAGE" value="częściowa logika zapisu do pliku" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/MainFrame.java</url>
-          <line>70</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

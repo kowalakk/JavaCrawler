@@ -69,6 +69,7 @@ public class MainFrame extends JFrame {
         filterComboBox.setFont(myFont);
         filterComboBox.addActionListener(e -> {
             selectedFilter = filterComboBox.getSelectedIndex();
+            filterTextBox.setText("");
             filterTextBox.setVisible(selectedFilter != 0);
         });
         this.add(filterComboBox);

@@ -22,12 +22,13 @@ public class MainFrame extends JFrame {
     JTextField urlField;
     JComboBox<String> filterComboBox;
     JCheckBox chooseTextCheckbox;
+    JCheckBox chooseAttributeCheckbox;
     JTextField chooseAttributeTextBox;
     JLabel saveToFileFileNameLabel;
 
     MainFrame() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(800, 1000);
+        this.setSize(800, 800);
         this.setTitle("Web Crawler");
         this.setLayout(null);
 
@@ -102,7 +103,7 @@ public class MainFrame extends JFrame {
         chooseTextCheckbox.setBounds(150, 125, 100, 40);
         this.add(chooseTextCheckbox);
 
-        JCheckBox chooseAttributeCheckbox = new JCheckBox();
+        chooseAttributeCheckbox = new JCheckBox();
         chooseAttributeCheckbox.setText("Attribute");
         chooseAttributeCheckbox.setFont(myFont);
         chooseAttributeCheckbox.setBounds(250, 125, 100, 40);
@@ -131,7 +132,9 @@ public class MainFrame extends JFrame {
                     saveSettingsToFile(
                             urlField.getText(),
                             Objects.requireNonNull(filterComboBox.getSelectedItem()).toString(),
-                            filterTextBox.getText());
+                            filterTextBox.getText(),
+                            chooseAttributeTextBox.getText()
+                    );
                     extractToFile();
                 }
             } catch (Exception ex) {
@@ -147,8 +150,12 @@ public class MainFrame extends JFrame {
         usePreviousSettingsCheckbox.setBounds(30, 225, 250, 40);
         usePreviousSettingsCheckbox.addActionListener(e -> {
             try {
-                if (usePreviousSettingsCheckbox.isSelected())
+                if (usePreviousSettingsCheckbox.isSelected()){
                     getSettingsFromFile();
+                    document = readWebPage(urlField.getText());
+                    textArea.setText(parseDocument().toString());
+                }
+
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
@@ -184,17 +191,22 @@ public class MainFrame extends JFrame {
         textArea.setFont(myFont);
         textArea.setEditable(false);
         JScrollPane scroll = new JScrollPane(textArea);
-        scroll.setBounds(20, 275, 750, 475);
+        scroll.setBounds(20, 275, 750, 400);
         this.add(scroll);
 
         this.setVisible(true);
     }
 
-    private void saveSettingsToFile(String url, String filter, String filterString) throws IOException {
+    private void saveSettingsToFile(String url, String filter, String filterString, String attrText) throws IOException {
         try {
             FileWriter fileWriter = new FileWriter(settingsFilePath);
             PrintWriter printWriter = new PrintWriter(fileWriter);
-            printWriter.printf("url %s \nfile %s \nfilter %s \nfilter_string %s", url, this.destinationFile.getAbsolutePath(), filter, filterString);
+            String isText = "";
+            if (chooseTextCheckbox.isSelected()) isText = "y";
+            String isAttr = "";
+            if(chooseAttributeCheckbox.isSelected()) isAttr = "y";
+            printWriter.printf("url %s \nfile %s \nfilter %s \nfilter_string %s \ntext %s \nattribute %s \nattr_name %s",
+                    url, this.destinationFile.getAbsolutePath(), filter, filterString, isText, isAttr, attrText);
             printWriter.close();
             fileWriter.close();
         } catch (Exception e) {
@@ -227,6 +239,20 @@ public class MainFrame extends JFrame {
                     case "filter_string":
                         if (args.length > 1)
                             filterTextBox.setText(args[1]);
+                        break;
+                    case "text":
+                        if(args.length > 1)
+                            chooseTextCheckbox.setSelected(true);
+                        break;
+                    case "attribute":
+                        if(args.length > 1)
+                            chooseAttributeCheckbox.setSelected(true);
+                        break;
+                    case "attr_name":
+                        if(args.length > 1){
+                            chooseAttributeTextBox.setVisible(true);
+                            chooseAttributeTextBox.setText(args[1]);
+                        }
                         break;
                     default:
                         break;
@@ -268,15 +294,18 @@ public class MainFrame extends JFrame {
 
     public void extractToFile() {
         try {
-            FileWriter fileWriter = new FileWriter(destinationFile);
+            FileWriter fileWriter = new FileWriter(destinationFile, true);
             PrintWriter printWriter = new PrintWriter(fileWriter);
 
             Elements elements = parseDocument();
             for (Element element : elements) {
                 if (chooseTextCheckbox.isSelected())
                     printWriter.printf("%s\n", element.text());
-                if (chooseAttributeTextBox.isVisible())
-                    printWriter.printf("%s = %s\n", chooseAttributeTextBox.getText(), element.attr(chooseAttributeTextBox.getText()));
+                if (chooseAttributeCheckbox.isSelected()) {
+                    String attributeName = chooseAttributeTextBox.getText();
+                    if(element.attributes().hasDeclaredValueForKey(attributeName))
+                        printWriter.printf("%s = %s\n", attributeName, element.attr(attributeName));
+                }
             }
             printWriter.close();
             fileWriter.close();

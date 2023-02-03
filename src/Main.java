@@ -1,8 +1,9 @@
-
+import application.WebCrawler;
+import javafx.application.Application;
 
 public class Main {
     public static void main(String[] args) {
-        new MainFrame();
+        Application.launch(WebCrawler.class, args);
 
     }
 }

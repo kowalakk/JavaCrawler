@@ -4,12 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="364f142a-e6a2-4e34-8b73-6e39a80ff974" name="Changes" comment="podstawowe filtrowanie">
+    <list default="true" id="364f142a-e6a2-4e34-8b73-6e39a80ff974" name="Changes" comment="extracting">
+      <change afterPath="$PROJECT_DIR$/src/application/ExtractPane.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/application/ExtractionModule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/application/FilePane.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/application/FilterPane.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/application/SaveModule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/application/UrlPane.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/application/WebCrawler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JavaCrawler.iml" beforeDir="false" afterPath="$PROJECT_DIR$/JavaCrawler.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MainFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/settings.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/settings.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MainFrame.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,18 +54,23 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/Konrad/source/repos/java/jsoup-1.15.3.jar",
+    "last_opened_file_path": "C:/Users/Konrad/source/repos/kowalakk/JavaCrawler/src",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
-    "project.structure.last.edited": "Modules",
+    "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "settings.editor.selected.configurable": "configurable.group.tools",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Konrad\source\repos\kowalakk\JavaCrawler\src" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
@@ -86,6 +98,10 @@
       <workItem from="1673182172847" duration="5821000" />
       <workItem from="1673357888341" duration="671000" />
       <workItem from="1674563286294" duration="6356000" />
+      <workItem from="1675177800925" duration="1457000" />
+      <workItem from="1675323382588" duration="453000" />
+      <workItem from="1675328194864" duration="398000" />
+      <workItem from="1675342801639" duration="14300000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1673276026312</created>

@@ -1,4 +1,7 @@
 url file:///C:/Users/Konrad/Desktop/new_tab.html 
 file C:\Users\Konrad\Desktop\t.txt 
-filter Class name 
-filter_string line-content
+filter Class 
+filter_string line-content 
+text y 
+attribute  
+attr_name 

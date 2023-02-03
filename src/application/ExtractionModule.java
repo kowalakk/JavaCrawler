@@ -65,7 +65,29 @@ public class ExtractionModule {
                 builder.append(element.attr(attributeToExtract));
                 builder.append('\n');
             }
+
+            recursiveParse(element.children(), builder);
+
         }
         return builder.toString();
     }
+
+    private static void recursiveParse(Elements elements, StringBuilder builder) {
+
+        for (Element element : elements) {
+            if (isExtractingText) {
+                builder.append(element.text());
+                builder.append('\n');
+            }
+            if (isExtractingAttribute && !attributeToExtract.isEmpty() && element.attributes().hasDeclaredValueForKey(attributeToExtract)) {
+                builder.append(attributeToExtract);
+                builder.append(" = ");
+                builder.append(element.attr(attributeToExtract));
+                builder.append('\n');
+            }
+            recursiveParse(element.children(), builder);
+        }
+    }
+
+
 }
